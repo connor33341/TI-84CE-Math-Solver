@@ -11,6 +11,7 @@
 #define RESP_SIZE   20
 
 void PrintCentered(const char *str);
+void PrintPos(const char *str, const int x, const int y);
 
 static unsigned char font8x8[128 * 8];
 static unsigned char font8x8_spacing[128];
@@ -35,7 +36,7 @@ int main(void)
 
     bool Connected = false;
     while (!Connected){
-        if (!os_GetCSC()){
+        if (os_GetCSC()){
             break;
         };
     };
@@ -77,6 +78,10 @@ void PrintCentered(const char *str)
     gfx_PrintStringXY(str,
                       (GFX_LCD_WIDTH - gfx_GetStringWidth(str)) / 2,
                       (GFX_LCD_HEIGHT - 8) / 2);
+}
+
+void PrintPos(const char *str, const int x, const int y){
+    gfx_PrintStringXY(str,x,y);
 }
 
 static unsigned char font8x8_spacing[128] =
