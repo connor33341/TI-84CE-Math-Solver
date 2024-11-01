@@ -70,13 +70,14 @@ int main(void)
     while (Running){
         os_ClrHome();
         os_GetStringInput("Enter Equation:", inputBuffer, INPUT_SIZE);
+		sprintf(response, "Sending Equation: %s.", inputBuffer);
         if (inputBuffer[0] == '\0'){
             Running = false;
             break;
         } else {
-			
+			http_data_t *data = PostRequest(endpoint);
+			sprintf(response, "Response Data: %.*s",data);
         }
-        sprintf(response, "Sending Equation: %s.", inputBuffer);
         os_ClrHome();
         os_PutStrFull(response);
 
