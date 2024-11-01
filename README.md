@@ -11,4 +11,4 @@ A RNDIS device
     make gfx
     make
 ### Releases
-    [Release](https://github.com/connor33341/TI-84CE-Math-Solver/releases)
+[Release](https://github.com/connor33341/TI-84CE-Math-Solver/releases)
