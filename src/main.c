@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <graphx.h>
 #include <compression.h>
+#include <internet.h>
+#include <string.h>
+#include <tice.h>
 
 #include "gfx/gfx.h"
 
@@ -10,8 +13,13 @@
 #define INPUT_SIZE  10
 #define RESP_SIZE   20
 
+static const char* endpoint = "https://mathsolver.microsoft.com/cameraexp/api/v1/solvesimplelatex";
+const char* language = "en-us"; //clientInfo.mkt
+
 void PrintCentered(const char *str);
 void PrintPos(const char *str, const int x, const int y);
+http_data_t* PostRequest(const char* target);
+http_data_t* GetRequest(const char* target);
 
 static unsigned char font8x8[128 * 8];
 static unsigned char font8x8_spacing[128];
@@ -39,6 +47,10 @@ int main(void)
         if (os_GetCSC()){
             break;
         };
+		if (web_Connected()){
+			Connected = true;
+			break;
+		};
     };
 
     gfx_End();
@@ -48,11 +60,13 @@ int main(void)
         sprintf(response, "Aborting Connection");
         os_ClrHome();
         os_PutStrFull(response);
+		web_Cleanup();
         while (!os_GetCSC());
         return 0;
     };
 
     bool Running = true;
+	web_Init();
     while (Running){
         os_ClrHome();
         os_GetStringInput("Enter Equation:", inputBuffer, INPUT_SIZE);
@@ -60,7 +74,7 @@ int main(void)
             Running = false;
             break;
         } else {
-            
+			
         }
         sprintf(response, "Sending Equation: %s.", inputBuffer);
         os_ClrHome();
@@ -69,8 +83,30 @@ int main(void)
         /* Waits for a key */
         while (!os_GetCSC());
     }
-
+	web_Cleanup();
     return 0;
+}
+
+http_data_t* PostRequest(const char* target){
+	http_data_t *data = NULL;
+	web_status_t status = web_HTTPPost(target, &data, false, 2);
+
+	if (status == HTTP_STATUS_OK){
+		data->size;
+		data->data;
+	}
+	return data;
+}
+
+http_data_t* GetRequest(const char* target){
+	http_data_t *data = NULL;
+	web_status_t status = web_HTTPGet(target, &data, false);
+
+	if (status == HTTP_STATUS_OK){
+		data->size;
+		data->data;
+	}
+	return data;
 }
 
 void PrintCentered(const char *str)
